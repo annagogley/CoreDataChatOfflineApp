@@ -6,9 +6,8 @@
 //
 
 import UIKit
-import SwipeCellKit
 
-class ChatPreviewTableViewCell: SwipeTableViewCell {
+class ChatPreviewTableViewCell: UITableViewCell {
 
     @IBOutlet weak var chatPreviewLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!

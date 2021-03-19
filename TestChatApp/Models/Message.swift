@@ -10,5 +10,5 @@ import Foundation
 struct Message {
     var body: String
     var time: String
-    var sender: String = "user"
+    var sender: Bool = true
 }

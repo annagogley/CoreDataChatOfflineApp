@@ -6,12 +6,13 @@
 //
 
 import UIKit
-import SwipeCellKit
 import CoreData
 
-class ChatsPreviewViewController: UIViewController, SwipeTableViewCellDelegate {
+class ChatsPreviewViewController: UIViewController {
     
     @IBOutlet weak var chatTableView: UITableView!
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var chatPreview : [ChatPreview]?
     
     var messages : [Message] =
         [
@@ -33,9 +34,24 @@ class ChatsPreviewViewController: UIViewController, SwipeTableViewCellDelegate {
             navBar.isHidden = false
             navBar.backgroundColor = .white
             navBar.dropshadow(color: UIColor.black, opacity: 0.38, radius: 7)
+            navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
             
         }
         chatTableView.dataSource = self
+        fetchChats()
+    }
+    
+    func fetchChats() {
+        //fetch the data from Core Data to display in table view
+        do {
+            try context.fetch(ChatPreview.fetchRequest())
+            DispatchQueue.main.async {
+                self.chatTableView.reloadData()
+            }
+        }
+        catch {
+            print("Couldn't fetch data due to error: \(error)")
+        }
     }
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
@@ -58,36 +74,12 @@ extension ChatsPreviewViewController: UITableViewDataSource, UITableViewDelegate
         let cell = tableView.dequeueReusableCell(withIdentifier: K.cellIdentifier, for: indexPath) as! ChatPreviewTableViewCell
         cell.chatPreviewLabel.text = message.body
         cell.timeLabel.text = message.time
-        cell.delegate = self
+//        cell.delegate = self
         
         return cell
     }
     
-    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
-        guard orientation == .right else { return nil }
-
-        let deleteAction = SwipeAction(style: .destructive, title: "") { action, indexPath in
-            // handle action by updating model with deletion
-            self.updateModel(at: indexPath)
-        }
-
-        // customize the action appearance
-        deleteAction.image = UIImage(named: "iconDelete")?.tint(with: .white)
-        
-
-        return [deleteAction]
-    }
     
-    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
-        var options = SwipeOptions()
-        options.expansionStyle = .destructive
-        //        options.transitionStyle = .border
-        return options
-    }
-    
-    func updateModel(at indexPath: IndexPath) {
-        // Update our datamodel
-    }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: K.toChatSegue, sender: self)
@@ -97,6 +89,32 @@ extension ChatsPreviewViewController: UITableViewDataSource, UITableViewDelegate
         let destinationVC = segue.destination as! ChatViewController
         
         //set certain chat was selected 
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        //create swipe action
+        let action = UIContextualAction(style: .destructive, title: "") { (action, view, completionHandler) in
+            
+            //which chat to remove
+            let chatToRemove = self.chatPreview![indexPath.row]
+            
+            //remove the chat
+            self.context.delete(chatToRemove)
+            
+            //save the data
+            do {
+                try self.context.save()
+            }
+            catch {
+                print("Couldn't remove data due to: \(error)")
+            }
+            
+            //refecth the data
+            self.fetchChats()
+        }
+        action.backgroundColor = UIColor(patternImage: UIImage(named: K.deleteIcon)!)
+        
+        return UISwipeActionsConfiguration(actions: [action])
     }
     
 }

@@ -20,8 +20,8 @@
 		374A6E3325FFCE5C00FBE8AE /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374A6E3225FFCE5C00FBE8AE /* Message.swift */; };
 		374A6E3725FFD0A300FBE8AE /* ChatPreviewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374A6E3525FFD0A300FBE8AE /* ChatPreviewTableViewCell.swift */; };
 		374A6E3825FFD0A300FBE8AE /* ChatPreviewTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 374A6E3625FFD0A300FBE8AE /* ChatPreviewTableViewCell.xib */; };
-		374A6E442600AB6100FBE8AE /* SingleMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374A6E432600AB6100FBE8AE /* SingleMessage.swift */; };
 		374A6E482600ACE900FBE8AE /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 374A6E472600ACE900FBE8AE /* ChatViewController.swift */; };
+		37D1C5D426022EFE001FA324 /* UserMessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37D1C5D326022EFD001FA324 /* UserMessageCollectionViewCell.swift */; };
 		93E08E203660F3A9EB0D7F24 /* Pods_TestChatApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4895BE831620DCA3DB25E145 /* Pods_TestChatApp.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,8 +41,8 @@
 		374A6E3225FFCE5C00FBE8AE /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		374A6E3525FFD0A300FBE8AE /* ChatPreviewTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatPreviewTableViewCell.swift; sourceTree = "<group>"; };
 		374A6E3625FFD0A300FBE8AE /* ChatPreviewTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatPreviewTableViewCell.xib; sourceTree = "<group>"; };
-		374A6E432600AB6100FBE8AE /* SingleMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleMessage.swift; sourceTree = "<group>"; };
 		374A6E472600ACE900FBE8AE /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		37D1C5D326022EFD001FA324 /* UserMessageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		4895BE831620DCA3DB25E145 /* Pods_TestChatApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TestChatApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5147F072ACA9E99D031744C7 /* Pods-TestChatApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestChatApp.release.xcconfig"; path = "Target Support Files/Pods-TestChatApp/Pods-TestChatApp.release.xcconfig"; sourceTree = "<group>"; };
 		812F834C8F11DEE255615CF7 /* Pods-TestChatApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TestChatApp.debug.xcconfig"; path = "Target Support Files/Pods-TestChatApp/Pods-TestChatApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -118,7 +118,6 @@
 			children = (
 				374A6E1525FFC63300FBE8AE /* TestChatApp.xcdatamodeld */,
 				374A6E3225FFCE5C00FBE8AE /* Message.swift */,
-				374A6E432600AB6100FBE8AE /* SingleMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -129,6 +128,7 @@
 				374A6E3525FFD0A300FBE8AE /* ChatPreviewTableViewCell.swift */,
 				374A6E3625FFD0A300FBE8AE /* ChatPreviewTableViewCell.xib */,
 				374A6E1225FFC63300FBE8AE /* Main.storyboard */,
+				37D1C5D326022EFD001FA324 /* UserMessageCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -265,8 +265,8 @@
 				374A6E0D25FFC63300FBE8AE /* AppDelegate.swift in Sources */,
 				374A6E2825FFCA5800FBE8AE /* DropShadowExtension.swift in Sources */,
 				374A6E3325FFCE5C00FBE8AE /* Message.swift in Sources */,
-				374A6E442600AB6100FBE8AE /* SingleMessage.swift in Sources */,
 				374A6E0F25FFC63300FBE8AE /* SceneDelegate.swift in Sources */,
+				37D1C5D426022EFE001FA324 /* UserMessageCollectionViewCell.swift in Sources */,
 				374A6E2B25FFCB1E00FBE8AE /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -6,49 +6,106 @@
 //
 
 import UIKit
+import CoreData
 
 class ChatViewController: UIViewController {
 
     @IBOutlet weak var chatCollectionView: UICollectionView!
     @IBOutlet weak var messageTextField: UITextField!
+    @IBOutlet weak var collectionLayout: UICollectionViewFlowLayout! {
+        didSet {
+            collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        }
+    }
     
-    var messages : [Message] =
-        [
-            Message(body: "Hello, neighbour!", time: "19:27", sender: "self"),
-            Message(body: "Somethibg long it's a big message way a as as ", time: "09:27", sender: "other"),
-            Message(body: "It's test chat", time: "13:06", sender: "self"),
-        ]
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var messages = [Messages]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        chatCollectionView.dataSource = self
         
-        
-        // Do any additional setup after loading the view.
+        //get items from Core Data
+        loadMessages()
+    }
+    
+    func loadMessages() {
+        //fetch the data from Core Data to display in table view
+        let request : NSFetchRequest<Messages> = Messages.fetchRequest()
+        do {
+            messages = try context.fetch(request)
+        }
+        catch {
+            print("Couldn't fetch data due to error: \(error)")
+        }
+        chatCollectionView.reloadData()
+    }
+    
+    func saveMessages() {
+        do {
+            try context.save()
+        }
+        catch {
+            print("Couldn't save data due to error \(error)")
+        }
+        chatCollectionView.reloadData()
     }
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
+        guard messageTextField.text != nil else {
+            return
+        }
+        let date = Date()
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: date)
+        let minutes = calendar.component(.minute, from: date)
+        
+        //creating a message object
+        let newMessage = Messages(context: context)
+        newMessage.messageBody = messageTextField.text
+        newMessage.sendTime = "\(hour):\(minutes)"
+        newMessage.messageSender = Bool.random()
+        
+        //saving a message object
+        saveMessages()
+        
+        //refetch data
+        
+        
     }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
-extension ChatViewController: UICollectionViewDataSource {
+extension ChatViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        
+        return 1
+    }
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: K.messageCollCell, for: indexPath)
         
-        
+        let cell = chatCollectionView.dequeueReusableCell(withReuseIdentifier: K.messageCollCell, for: indexPath) as! UserMessageCollectionViewCell
+        let message = messages[indexPath.row]
+        cell.setupCell(message: message)
+        if message.messageSender {
+            cell.leftTime.isHidden = false
+            cell.rightTime.isHidden = true
+            cell.messageBubble.backgroundColor = UIColor(named: K.brandColors.messageColor)
+            cell.messageBody.font = .italicSystemFont(ofSize: 15)
+            cell.messageBody.textColor = .white
+        } else {
+            cell.leftTime.isHidden = true
+            cell.rightTime.isHidden = false
+            cell.messageBubble.backgroundColor = .white
+            cell.messageBody.font = .systemFont(ofSize: 15)
+            cell.messageBody.textColor = .black
+        }
+        cell.maxWidth = collectionView.bounds.width  - CGFloat(74)
         
         
         return cell
