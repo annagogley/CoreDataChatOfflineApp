@@ -120,20 +120,20 @@
                                             <rect key="frame" x="0.0" y="0.0" width="337" height="100"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" alignment="bottom" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NgN-h8-zRA">
-                                                    <rect key="frame" x="0.0" y="0.0" width="337" height="100"/>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="NgN-h8-zRA">
+                                                    <rect key="frame" x="8" y="8" width="321" height="84"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVC-73-On5">
-                                                            <rect key="frame" x="0.0" y="86.5" width="28.5" height="13.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVC-73-On5">
+                                                            <rect key="frame" x="0.0" y="35.5" width="28.5" height="13.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hsX-go-uZy">
-                                                            <rect key="frame" x="104.5" y="0.0" width="128" height="100"/>
+                                                        <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hsX-go-uZy">
+                                                            <rect key="frame" x="36.5" y="0.0" width="128" height="84"/>
                                                             <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="[MessageBody]" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zub-l2-fXG">
-                                                                    <rect key="frame" x="10" y="10" width="108" height="80"/>
+                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="[MessageBody]" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Zub-l2-fXG">
+                                                                    <rect key="frame" x="10" y="10" width="82" height="64"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                                     <nil key="textColor"/>
                                                                     <nil key="highlightedColor"/>
@@ -147,8 +147,8 @@
                                                                 <constraint firstItem="Zub-l2-fXG" firstAttribute="leading" secondItem="hsX-go-uZy" secondAttribute="leading" constant="10" id="vRd-Jp-kQp"/>
                                                             </constraints>
                                                         </view>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uN8-VD-a8n">
-                                                            <rect key="frame" x="308.5" y="86.5" width="28.5" height="13.5"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uN8-VD-a8n">
+                                                            <rect key="frame" x="172.5" y="35.5" width="148.5" height="13.5"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -160,10 +160,10 @@
                                                 </stackView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="NgN-h8-zRA" firstAttribute="leading" secondItem="ZbE-TH-Vgr" secondAttribute="leading" id="bgJ-gi-gcV"/>
-                                                <constraint firstAttribute="trailing" secondItem="NgN-h8-zRA" secondAttribute="trailing" id="dDT-f3-OXE"/>
-                                                <constraint firstItem="NgN-h8-zRA" firstAttribute="top" secondItem="ZbE-TH-Vgr" secondAttribute="top" id="eD7-H4-Ail"/>
-                                                <constraint firstAttribute="bottom" secondItem="NgN-h8-zRA" secondAttribute="bottom" id="tv0-iM-tDd"/>
+                                                <constraint firstAttribute="trailing" secondItem="NgN-h8-zRA" secondAttribute="trailing" constant="8" id="Ala-dN-Tag"/>
+                                                <constraint firstItem="NgN-h8-zRA" firstAttribute="leading" secondItem="ZbE-TH-Vgr" secondAttribute="leading" constant="8" id="Ffa-uv-F9I"/>
+                                                <constraint firstItem="NgN-h8-zRA" firstAttribute="top" secondItem="ZbE-TH-Vgr" secondAttribute="top" constant="8" id="PjQ-Z8-qHa"/>
+                                                <constraint firstAttribute="bottom" secondItem="NgN-h8-zRA" secondAttribute="bottom" constant="8" id="VFE-Kt-JGA"/>
                                             </constraints>
                                         </collectionViewCellContentView>
                                         <size key="customSize" width="337" height="100"/>

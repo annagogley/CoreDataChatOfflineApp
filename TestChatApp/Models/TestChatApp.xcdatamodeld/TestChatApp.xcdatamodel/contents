@@ -2,15 +2,18 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="19H524" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="ChatPreview" representedClassName=".ChatPreview" syncable="YES" codeGenerationType="class">
         <attribute name="body" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="time" optional="YES" attributeType="String"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Messages" inverseName="parentCategory" inverseEntity="Messages"/>
     </entity>
     <entity name="Messages" representedClassName=".Messages" syncable="YES" codeGenerationType="class">
+        <attribute name="isSender" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="messageBody" optional="YES" attributeType="String"/>
-        <attribute name="messageSender" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="sendTime" optional="YES" attributeType="String"/>
+        <relationship name="parentCategory" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ChatPreview" inverseName="messages" inverseEntity="ChatPreview"/>
     </entity>
     <elements>
-        <element name="ChatPreview" positionX="-63" positionY="9" width="128" height="73"/>
-        <element name="Messages" positionX="-63" positionY="-18" width="128" height="88"/>
+        <element name="ChatPreview" positionX="-228.22265625" positionY="-12.390625" width="98.6640625" height="103"/>
+        <element name="Messages" positionX="-43.65625" positionY="-0.98046875" width="128" height="103"/>
     </elements>
 </model>
