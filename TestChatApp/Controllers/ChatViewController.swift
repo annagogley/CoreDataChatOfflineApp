@@ -24,8 +24,7 @@ class ChatViewController: UIViewController {
             loadMessages()
         }
     }
-    let fetchRequest : NSFetchRequest<ChatPreview> = ChatPreview.fetchRequest()
-    var createdChat = [ChatPreview]()
+    var createdChat = ChatPreview()
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
@@ -44,7 +43,7 @@ class ChatViewController: UIViewController {
     
     func loadMessages(with request: NSFetchRequest<Messages> = Messages.fetchRequest(), predicate: NSPredicate? = nil) {
         //fetch the data from Core Data to display in table view
-        let categoryPredicate = NSPredicate(format: "parentChat.id MATCHES %@", selectedChat!.id!)
+        let categoryPredicate = NSPredicate(format: "parentCategory.id MATCHES %@", selectedChat!.id!)
         
         if let additionalPredicate = predicate {
             request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, additionalPredicate])
@@ -77,10 +76,11 @@ class ChatViewController: UIViewController {
     
     func updateChats(message: String, sendTime: String) -> Bool {
         var success = false
+        let fetchRequest : NSFetchRequest<ChatPreview> = ChatPreview.fetchRequest()
         
         do {
             let testing = try context.fetch(fetchRequest)
-            fetchRequest.predicate = NSPredicate(format: "parentChat.id MATCHES %@", createdChat[0].id!)
+            
             if testing.count == 1{
                 let messageToUpdate = testing[0]
                 messageToUpdate.body = message
@@ -121,19 +121,26 @@ class ChatViewController: UIViewController {
         //        saveMessages()
         saveMessages()
         
-        let newChat = ChatPreview(context: context)
-        let uuid = UUID().uuidString
-        newChat.body = newMessage.messageBody
-        newChat.time = newMessage.sendTime
-        newChat.id = uuid
-        if createdChat.count == 0 {
-            createdChat.append(newChat)
-            print("appending message to new chat")
-        }
-        else {
-            updateChats(message: newMessage.messageBody!, sendTime: newMessage.sendTime!)
-            print("updated")
-        }
+//        let newChat = ChatPreview(context: context)
+//        let uuid = UUID().uuidString
+//        createdChat.body = newMessage.messageBody
+//        createdChat.time = newMessage.sendTime
+//        createdChat.id = uuid
+//        do {
+//            try context.save()
+//        }
+//        catch {
+//            print("Couldn't save data due to error \(error)")
+//        }
+//        if createdChat.time == "" {
+////            createdChat.append(newChat)
+//            createdChat = newChat
+//            print("appending message to new chat")
+//        }
+//        else {
+//            updateChats(message: newMessage.messageBody!, sendTime: newMessage.sendTime!)
+//            print("updated")
+//        }
         
     }
     
@@ -181,10 +188,8 @@ extension ChatViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cell = chatCollectionView.dequeueReusableCell(withReuseIdentifier: K.messageCollCell, for: indexPath) as! UserMessageCollectionViewCell
-        let message = messages[indexPath.row]
-        cell.setupCell(message: message)
-        return CGSize(width: collectionView.bounds.width - 32, height: cell.messageBubble.frame.height)
+        
+        return CGSize(width: collectionView.bounds.width - 32, height: collectionView.bounds.height/10)
     }
     
     
