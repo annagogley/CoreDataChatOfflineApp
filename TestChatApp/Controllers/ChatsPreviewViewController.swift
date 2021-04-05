@@ -13,7 +13,6 @@ class ChatsPreviewViewController: UIViewController {
     @IBOutlet weak var chatTableView: UITableView!
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     var chatPreview = [ChatPreview]()
-    var buttonSelection:Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,12 +23,12 @@ class ChatsPreviewViewController: UIViewController {
         
         if let navBar = navigationController?.navigationBar {
             navBar.isHidden = false
-            navBar.backgroundColor = .white
-            navBar.dropshadow(color: UIColor.black, opacity: 0.38, radius: 7)
-            navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
-            
+//            navBar.dropshadow(color: UIColor.black, opacity: 0.38, radius: 7)
+//            navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
         }
+        
         chatTableView.dataSource = self
+        chatTableView.delegate = self
         loadChats()
         print(chatPreview.count)
     }
@@ -39,10 +38,7 @@ class ChatsPreviewViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        saveChats()
-        if buttonSelection {
-            print("++++")
-        }
+
     }
     
 //MARK: - data manipulation
@@ -50,6 +46,10 @@ class ChatsPreviewViewController: UIViewController {
     func loadChats() {
         //fetch the data from Core Data to display in table view
         let request : NSFetchRequest<ChatPreview> = ChatPreview.fetchRequest()
+        
+        let sort = NSSortDescriptor(key: "date", ascending: false)
+        request.sortDescriptors = [sort]
+        
         do {
             chatPreview = try context.fetch(request)
         }
@@ -73,22 +73,30 @@ class ChatsPreviewViewController: UIViewController {
     
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
-        buttonSelection = true
-        print(buttonSelection)
         let newChat = ChatPreview(context: context)
         //генерируем id
         let uuid = UUID().uuidString
+        //генерируем время
+        let date = Date()
+        let calendar = Calendar.current
+        let hour = calendar.component(.hour, from: date)
+        let minutes = calendar.component(.minute, from: date)
+        var minutesStr = "\(minutes)"
+        if minutes - 10 < 0 {
+            minutesStr = "0\(minutes)"
+        }
+        
+        //creating chat preview
+        newChat.date = date
         newChat.id = uuid
-        newChat.body = "Something"
-        newChat.time = "16:44"
+        newChat.body = "New chat"
+        newChat.time = "\(hour):\(minutesStr)"
         chatPreview.append(newChat)
+        chatTableView.reloadData()
+        
         saveChats()
-        print(newChat)
-        print("add button pressed")
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
-            print("delayed")
-            self.performSegue(withIdentifier: "goToChat", sender: self)
-        })
+        loadChats()
+
     }
     
 
@@ -112,7 +120,9 @@ extension ChatsPreviewViewController: UITableViewDataSource, UITableViewDelegate
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: K.toChatSegue, sender: self)
+        print("chat \(chatPreview[indexPath.row].id ?? "1") was selected")
+        print("row \(indexPath) was selected")
+        performSegue(withIdentifier: "goToChat", sender: self)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -121,7 +131,7 @@ extension ChatsPreviewViewController: UITableViewDataSource, UITableViewDelegate
         //set certain chat was selected
         if let indexPath = chatTableView.indexPathForSelectedRow {
             destinationVC.selectedChat = chatPreview[indexPath.row]
-        }
+        } 
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

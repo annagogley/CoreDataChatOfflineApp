@@ -82,17 +82,17 @@
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="1bS-GF-B0s">
                             <connections>
                                 <action selector="addButtonPressed:" destination="DT1-1q-sa4" id="RLz-5W-bcW"/>
-                                <segue destination="4G6-oq-5dX" kind="show" identifier="goToChat" id="qJJ-y9-BHP"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="chatTableView" destination="25l-4g-Tor" id="Ngq-q0-as9"/>
+                        <segue destination="4G6-oq-5dX" kind="show" identifier="goToChat" id="USp-uq-g1G"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="S4o-3q-4Ve" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1862" y="80"/>
+            <point key="canvasLocation" x="1860.8695652173915" y="79.6875"/>
         </scene>
         <!--Chat-->
         <scene sceneID="1kV-3k-Haq">
@@ -228,6 +228,8 @@
                         <outlet property="chatCollectionView" destination="0ev-9H-KgB" id="lWW-m5-dK9"/>
                         <outlet property="collectionLayout" destination="EDD-og-Tjw" id="XHl-uS-xwm"/>
                         <outlet property="messageTextField" destination="u6l-sV-SFZ" id="Lg6-6J-e6C"/>
+                        <outlet property="messageView" destination="2my-ZI-xrQ" id="Mug-gs-zIw"/>
+                        <outlet property="messageViewBottomConstraint" destination="Rj9-Co-cpd" id="XZk-Aj-Zvc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qsd-le-1S6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

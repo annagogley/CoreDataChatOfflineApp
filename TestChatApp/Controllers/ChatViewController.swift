@@ -17,6 +17,8 @@ class ChatViewController: UIViewController {
             collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         }
     }
+    @IBOutlet weak var messageView: UIView!
+    @IBOutlet weak var messageViewBottomConstraint: NSLayoutConstraint!
     
     var messages = [Messages]()
     var selectedChat: ChatPreview? {
@@ -24,25 +26,59 @@ class ChatViewController: UIViewController {
             loadMessages()
         }
     }
-    var createdChat = ChatPreview()
+    
+    
+    
     
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
-        //        navigationController?.navigationBar.
+        
         chatCollectionView.dataSource = self
         chatCollectionView.delegate = self
         chatCollectionView.collectionViewLayout = UICollectionViewFlowLayout()
         
         
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(ChatViewController.keyboardWillShow), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        
     }
+   
+    //MARK: - Textfield above the keyboard
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        
+        if let userInfo = notification.userInfo {
+            let keyboardSize = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+            let isKeyboardIsShowing = notification.name == UIResponder.keyboardWillShowNotification
+            print(isKeyboardIsShowing)
+            if #available(iOS 11.0, *) {
+                let window = UIApplication.shared.keyWindow
+                let bottomPadding = window?.safeAreaInsets.bottom
+                messageViewBottomConstraint.constant = isKeyboardIsShowing ? (keyboardSize!.height - bottomPadding!) : 0
+            } else {
+                messageViewBottomConstraint.constant = isKeyboardIsShowing ? keyboardSize!.height : 0
+            }
+            
+            UIView.animate(withDuration: 0, delay: 0, options: UIView.AnimationOptions.curveEaseOut) {
+                self.view.layoutIfNeeded()
+            } completion: { (completed) in }
+
+        }
+    }
+    
+   
     
     //MARK: - Data Manipulation
     
     func loadMessages(with request: NSFetchRequest<Messages> = Messages.fetchRequest(), predicate: NSPredicate? = nil) {
         //fetch the data from Core Data to display in table view
+        guard selectedChat != nil else {
+            return
+        }
         let categoryPredicate = NSPredicate(format: "parentCategory.id MATCHES %@", selectedChat!.id!)
         
         if let additionalPredicate = predicate {
@@ -51,6 +87,12 @@ class ChatViewController: UIViewController {
             request.predicate = categoryPredicate
         }
         
+        DispatchQueue.main.async {
+            let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
+            self.chatCollectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+        }
+        
+        
         do {
             messages = try context.fetch(request)
         }
@@ -58,8 +100,7 @@ class ChatViewController: UIViewController {
             print("Couldn't fetch data due to error: \(error)")
         }
         
-        chatCollectionView.reloadData()
-    }
+}
     
     func saveMessages() {
         do {
@@ -67,80 +108,44 @@ class ChatViewController: UIViewController {
             DispatchQueue.main.async {
                 self.chatCollectionView.reloadData()
             }
-            
         }
         catch {
             print("Couldn't save data due to error \(error)")
         }
     }
     
-    func updateChats(message: String, sendTime: String) -> Bool {
-        var success = false
-        let fetchRequest : NSFetchRequest<ChatPreview> = ChatPreview.fetchRequest()
-        
-        do {
-            let testing = try context.fetch(fetchRequest)
-            
-            if testing.count == 1{
-                let messageToUpdate = testing[0]
-                messageToUpdate.body = message
-                messageToUpdate.time = sendTime
-                try context.save()
-                success = true
-                print("it's allright")
-            }
-        } catch {
-            print("couldn't save chats due to \(error)")
-        }
-        return success
-    }
-    
-    
     //MARK: - send button pressed
     
     @IBAction func sendButtonPressed(_ sender: UIButton) {
-        guard messageTextField.text != nil else {
+        guard let text = messageTextField.text, !text.isEmpty  else {
             return
         }
         let date = Date()
         let calendar = Calendar.current
         let hour = calendar.component(.hour, from: date)
         let minutes = calendar.component(.minute, from: date)
+        var minutesStr = "\(minutes)"
+        if minutes - 10 < 0 {
+            minutesStr = "0\(minutes)"
+        }
         
         //creating a message object
         let newMessage = Messages(context: context)
         newMessage.messageBody = messageTextField.text
-        newMessage.sendTime = "\(hour):\(minutes)"
+        newMessage.sendTime = "\(hour):\(minutesStr)"
         newMessage.isSender = Bool.random()
         newMessage.parentCategory = selectedChat
         messages.append(newMessage)
-        //        selectedChat?.body = newMessage.messageBody
-        //        selectedChat?.time = newMessage.sendTime
-        
-        //saving a message object
-        //        saveMessages()
+        selectedChat?.body = newMessage.messageBody
+        selectedChat?.time = newMessage.sendTime
+        selectedChat?.date = date
+   
         saveMessages()
-        
-//        let newChat = ChatPreview(context: context)
-//        let uuid = UUID().uuidString
-//        createdChat.body = newMessage.messageBody
-//        createdChat.time = newMessage.sendTime
-//        createdChat.id = uuid
-//        do {
-//            try context.save()
-//        }
-//        catch {
-//            print("Couldn't save data due to error \(error)")
-//        }
-//        if createdChat.time == "" {
-////            createdChat.append(newChat)
-//            createdChat = newChat
-//            print("appending message to new chat")
-//        }
-//        else {
-//            updateChats(message: newMessage.messageBody!, sendTime: newMessage.sendTime!)
-//            print("updated")
-//        }
+        messageTextField.text = ""
+        DispatchQueue.main.async {
+            let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
+            self.chatCollectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+        }
         
     }
     
@@ -157,6 +162,10 @@ extension ChatViewController: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return messages.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        messageTextField.endEditing(true)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -189,25 +198,10 @@ extension ChatViewController: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        return CGSize(width: collectionView.bounds.width - 32, height: collectionView.bounds.height/10)
+        return CGSize(width: collectionView.bounds.width - 32, height: collectionView.bounds.height/8)
     }
     
     
 }
 
-//extension ChatViewController: UITextFieldDelegate {
-//
-//    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//
-//        if let txt = textField.text, txt.count >= 1 {
-//            textField.resignFirstResponder()
-//            return true
-//        }
-//        return false
-//    }
-//
-//    func textFieldDidEndEditing(_ textField: UITextField) {
-//
-//        textField.resignFirstResponder()
-//    }
-//}
+
