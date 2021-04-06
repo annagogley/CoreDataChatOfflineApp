@@ -17,19 +17,23 @@ class ChatsPreviewViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        showSpinner()
+        
         chatTableView.rowHeight = 68
         chatTableView.separatorStyle = .none
         chatTableView.register(UINib(nibName: K.cellNibName, bundle: nil), forCellReuseIdentifier: K.cellIdentifier)
         
+        print((navigationController!.navigationBar.bounds))
         if let navBar = navigationController?.navigationBar {
             navBar.isHidden = false
-//            navBar.dropshadow(color: UIColor.black, opacity: 0.38, radius: 7)
-//            navBar.layer.shadowPath = UIBezierPath(rect: navBar.bounds).cgPath
+            navbarView(height: Int(navigationController!.navigationBar.bounds.height))
         }
         
         chatTableView.dataSource = self
         chatTableView.delegate = self
         loadChats()
+        blankPage(chats: chatPreview.count)
+       
         print(chatPreview.count)
     }
     
@@ -67,6 +71,7 @@ class ChatsPreviewViewController: UIViewController {
             print("Couldn't save data due to error \(error)")
         }
         print("savingChats")
+        hideBlankPage()
         chatTableView.reloadData()
     }
     

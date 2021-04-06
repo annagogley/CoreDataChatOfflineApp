@@ -40,6 +40,11 @@ class ChatViewController: UIViewController {
         chatCollectionView.delegate = self
         chatCollectionView.collectionViewLayout = UICollectionViewFlowLayout()
         
+        if let navBar = navigationController?.navigationBar {
+            navBar.isHidden = false
+            navbarView(height: Int(navigationController!.navigationBar.bounds.height))
+        }
+        
         
         NotificationCenter.default.addObserver(self, selector: #selector(ChatViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ChatViewController.keyboardWillShow), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -145,6 +150,7 @@ class ChatViewController: UIViewController {
         DispatchQueue.main.async {
             let indexPath = IndexPath(row: self.messages.count - 1, section: 0)
             self.chatCollectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+            
         }
         
     }

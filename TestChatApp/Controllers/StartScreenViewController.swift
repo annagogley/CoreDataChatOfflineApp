@@ -26,21 +26,15 @@ class StartScreenViewController: UIViewController {
         enterButtonOutlet.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         enterButtonOutlet.alpha = 0
         
-        UIView.animate(withDuration: 1.0) {
+        UIView.animate(withDuration: 1) {
                 self.enterButtonOutlet.alpha = 1.0
             }
         
-        
-        
-        UIView.animate(withDuration: 0.2, delay: 1.0,
-            animations: {
-                self.enterButtonOutlet.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-            },
-            completion: { _ in
-                UIView.animate(withDuration: 0.2) {
-                    self.enterButtonOutlet.transform = CGAffineTransform.identity
-                }
-            })
+        enterButtonOutlet.transform = CGAffineTransform(scaleX: 0, y: 0)
+        UIView.animate(withDuration: 1, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0, options: .curveEaseOut, animations: {
+            self.enterButtonOutlet.transform = .identity
+        }, completion: nil)
+
     }
     
     
