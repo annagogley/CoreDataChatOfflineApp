@@ -26,7 +26,16 @@ class ChatsPreviewViewController: UIViewController {
         print((navigationController!.navigationBar.bounds))
         if let navBar = navigationController?.navigationBar {
             navBar.isHidden = false
-            navbarView(height: Int(navigationController!.navigationBar.bounds.height))
+            if #available(iOS 13.0, *) {
+                let navBarAppearance = UINavigationBarAppearance()
+                navBar.scrollEdgeAppearance = navBarAppearance
+                navBar.dropshadow(color: .black, opacity: 0.38, radius: 7)
+                
+            } else {
+                navBar.dropshadow(color: .black, opacity: 0.38, radius: 7)
+            }
+
+//            navbarView(height: Int(navigationController!.navigationBar.bounds.height))
         }
         
         chatTableView.dataSource = self

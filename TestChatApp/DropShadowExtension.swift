@@ -20,11 +20,6 @@ extension UIView {
 
 public extension UIImage {
 
-    //
-    /// Tint Image
-    ///
-    /// - Parameter fillColor: UIColor
-    /// - Returns: Image with tint color
     func tint(with fillColor: UIColor) -> UIImage? {
         let image = withRenderingMode(.alwaysTemplate)
         UIGraphicsBeginImageContextWithOptions(size, false, scale)
