@@ -12,7 +12,7 @@ struct K {
     static let cellIdentifier = "ReusableCell"
     static let toChatSegue = "goToChat"
     static let messageCollCell = "MessageReusableCell"
-    static let timeInterval = 3.0
+    static let timeInterval = 1.0
     static let deleteIcon = "iconDelete"
     struct brandColors {
         static let redShadow = "brandRedShadow"

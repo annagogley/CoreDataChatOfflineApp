@@ -42,10 +42,10 @@ class ChatViewController: UIViewController {
         
         if let navBar = navigationController?.navigationBar {
             navBar.isHidden = false
-            navbarView(height: Int(navigationController!.navigationBar.bounds.height))
+            
+//            navbarView(height: Int(navigationController!.navigationBar.bounds.height))
         }
-        
-        
+                
         NotificationCenter.default.addObserver(self, selector: #selector(ChatViewController.keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(ChatViewController.keyboardWillShow), name: UIResponder.keyboardWillHideNotification, object: nil)
         
@@ -198,14 +198,28 @@ extension ChatViewController: UICollectionViewDataSource, UICollectionViewDelega
             cell.messageBody.font = .systemFont(ofSize: 15)
             cell.messageBody.textColor = .black
         }
+        
         return cell
         
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        return CGSize(width: collectionView.bounds.width - 32, height: collectionView.bounds.height/8)
+        let message = messages[indexPath.row]
+        return CGSize(width: collectionView.bounds.width - 32, height: heightForView(text: message.messageBody!, font: .systemFont(ofSize: 15), width: collectionView.bounds.width - 32))
+
     }
+    
+    func heightForView(text:String, font:UIFont, width:CGFloat) -> CGFloat{
+        let label:UILabel = UILabel(frame: CGRect(x: 10, y: 0, width: width, height: CGFloat.greatestFiniteMagnitude))
+        label.numberOfLines = 0
+        label.lineBreakMode = NSLineBreakMode.byWordWrapping
+        label.font = font
+        label.text = text
+
+        label.sizeToFit()
+        return label.frame.height + 50
+    }
+    
     
     
 }
